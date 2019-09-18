@@ -259,14 +259,18 @@ Page({
           const course = newCourses[m];
           if (course.name === lastCourse.name && m !== 13) {
             sameNum++;
-            if (course.hasOwnProperty('time'))
+            if (course.hasOwnProperty('time')) {
               lastTime = lastTime.concat(course.time.split(','));
+            }
           } else {
             if (m === 13)
               sameNum++;
             const height = 60 * (1 + sameNum) - 6 - 60 * ifFirst;
             // 结算上一段一样的课
             if (lastCourse.hasOwnProperty('name')) {
+              if (lastTime.length === 0){
+                lastTime = ["12", "13"]
+              }
               const time = this.distinctArr(lastTime);
               const timeStart = this.index2Time(time[0], lastCourse.address, true);
               const timeEnd = this.index2Time(time[time.length - 1], lastCourse.address, false);

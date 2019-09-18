@@ -7,7 +7,7 @@ App({
         course: [],
         cookie: null,
         token: null,
-        version: '1.1.2',
+        version: '1.1.3',
         github: 'swiftwhale/sues-wxss',
         update: {
             time: '2018年10月25日',

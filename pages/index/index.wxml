@@ -47,16 +47,16 @@
                 <text>8</text>
             </view>
             <view>
-                <text>13</text>
-                <text>14</text>
-            </view>
-            <view>
                 <text>9</text>
                 <text>10</text>
             </view>
             <view>
                 <text>11</text>
                 <text>12</text>
+            </view>
+            <view>
+                <text>13</text>
+                <text>14</text>
             </view>
         </view>
         <view class="content">
