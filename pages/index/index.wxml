@@ -2,7 +2,7 @@
     <view class="head corner">
         <view class="header weui-flex">
             <view class="header-btn" bindtap="preWeek">
-                <image style="width: 16px; height: 16px;" src="{{prebtn}}"/>
+                <image style="width: 16px; height: 16px;background-color:#1296db;" src="/res/com_arrow_left.png"/>
             </view>
             <view class="weui-flex__item header-time">
                 <picker bindchange="bindWeekChange" value="{{dateTitle}}" range="{{weekArr}}">
@@ -12,7 +12,7 @@
                 </picker>
             </view>
             <view class="header-btn" bindtap="nextWeek">
-                <image style="width: 16px; height: 16px;" src="{{nextbtn}}"/>
+                <image style="width: 16px; height: 16px;background-color:#1296db;" src="/res/com_arrow_right.png"/>
             </view>
         </view>
     </view>
