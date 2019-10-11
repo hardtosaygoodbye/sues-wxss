@@ -3,9 +3,7 @@ Page({
   data: {
     updateTime: '',
     version: ''
-  }
-
-  ,
+  },
   onLoad: function() {
     this.setData({
       version: app.globalData.version

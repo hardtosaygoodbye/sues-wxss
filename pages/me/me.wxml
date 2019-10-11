@@ -1,6 +1,6 @@
 <view class="page">
   <view style="text-align: center; height: 100px; margin-top: 20px">
-    <image style="width: 80px;height: 80px" src="../images/logo.png" />
+    <image style="width: 80px;height: 80px" src="/res/logo.png" />
   </view>
   <view class="page__bd">
     <view class="weui-cells__title">关于</view>

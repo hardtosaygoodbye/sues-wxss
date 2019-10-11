@@ -1,10 +1,9 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/index/me",
-    "pages/index/loginSchool",
-    "pages/other/tk",
-    "pages/other/updateNotice"
+    "pages/me/me",
+    "pages/loginSchool/loginSchool",
+    "pages/tk/tk"
   ],
   "tabBar": {
     "color": "#9b9b9b",
@@ -12,14 +11,14 @@
     "list": [
       {
         "pagePath": "pages/index/index",
-        "iconPath": "pages/images/icon-notset-table.png",
-        "selectedIconPath": "pages/images/icon-table.png",
+        "iconPath": "res/icon-notset-table.png",
+        "selectedIconPath": "res/icon-table.png",
         "text": "首页"
       },
       {
-        "pagePath": "pages/index/me",
-        "iconPath": "pages/images/icon-notset-me.png",
-        "selectedIconPath": "pages/images/icon-me.png",
+        "pagePath": "pages/me/me",
+        "iconPath": "res/icon-notset-me.png",
+        "selectedIconPath": "res/icon-me.png",
         "text": "我的"
       }
     ]
