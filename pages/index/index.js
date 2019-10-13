@@ -25,15 +25,19 @@ Page({
       "week": "周日",
       "date": "23日"
     }],
-    dateTitle: 0,
+    weekIndex: 0,
     weekArr: [],
     month: 0,
     colWidth: 60,
     palette: ['#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e67e22', '#e74c3c'],
     courses: [],
-    bg: ''
+    bg: '',
+    timeArr: []
   },
   onLoad() {
+    this.setData({
+      timeArr: Array.from({ length: 14 }, (v, k) => k+1)
+    })
     wx.showShareMenu()
     const course = wx.getStorageSync('course');
     app.globalData.course = course ? course : [];
@@ -44,10 +48,10 @@ Page({
       weekArr.push(this.calTimeInterval(new Date(i)));
     }
     dateNow = new Date();
-    const dateTitle = weekArr.indexOf(this.calTimeInterval(dateNow));
+    const weekIndex = weekArr.indexOf(this.calTimeInterval(dateNow));
     this.setData({
       weekArr: weekArr,
-      dateTitle: dateTitle
+      weekIndex: weekIndex
     });
   },
   onShow() {
@@ -69,9 +73,7 @@ Page({
   nextWeek() {
     dateNow = new Date(dateNow.getTime() + 7 * 24 * 60 * 60 * 1000);
     this.renderData(this, dateNow);
-  }
-  // 渲染数据
-  ,
+  },
   renderData(that, date) {
     const colWidth = (wx.getSystemInfoSync().windowWidth - 20) / 7 - 6;
     const ts = date.getTime();
@@ -85,29 +87,29 @@ Page({
     const dateE = new Date(tsEnd);
     const dateStart = dateS.getDate();
     const dateEnd = dateE.getDate();
-    let dateTitle = [];
+    let weekIndex = [];
     if (dateEnd > 6) {
       for (let i = 0, l = 7; i < l; i++) {
-        dateTitle.push((dateStart + i) + '日');
+        weekIndex.push((dateStart + i) + '日');
       }
     } else {
       for (let i = 0, l = 7 - dateEnd; i < l; i++) {
-        dateTitle.push((dateStart + i) + '日');
+        weekIndex.push((dateStart + i) + '日');
       }
       for (let i = 0, l = dateEnd; i < l; i++) {
-        dateTitle.push((i + 1) + '日');
+        weekIndex.push((i + 1) + '日');
       }
     }
     let title = [];
     for (let i = 0; i < 7; i++) {
       title.push({
         week: dayArrStr[i],
-        date: dateTitle[i]
+        date: weekIndex[i]
       })
     }
 
     that.setData({
-      dateTitle: that.data.weekArr.indexOf(that.calTimeInterval(date)),
+      weekIndex: that.data.weekArr.indexOf(that.calTimeInterval(date)),
       colWidth: colWidth,
       month: month,
       title: title
@@ -375,11 +377,11 @@ Page({
     return arr;
   },
   bindWeekChange(e) {
-    const dateTitle = e.detail.value;
+    const weekIndex = e.detail.value;
     this.setData({
-      dateTitle: dateTitle
+      weekIndex: weekIndex
     });
-    const a = this.data.weekArr[dateTitle].split('年');
+    const a = this.data.weekArr[weekIndex].split('年');
     const year = parseInt(a[0]);
     const b = a[1].split('月');
     const month = parseInt(b[0]) - 1;
