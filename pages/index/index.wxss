@@ -64,11 +64,11 @@
   padding: 10rpx 0;
 }
 
-.sidebar view {
+.sidebar text {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  height: 120px;
+  height: 60px;
 }
 
 .content {
