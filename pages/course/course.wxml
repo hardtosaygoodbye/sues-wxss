@@ -6,37 +6,77 @@
     </view>
     <view slot="content">课程表</view>
   </cu-custom>
-  <view class='date-control'>
-    <view class="arrow" bindtap="preWeek">
-      <image src="/res/com_arrow_left.png"/>
-    </view>
-    <view class="content">
-      {{weekArr[weekIndex]}}
-    </view>
-    <view class="arrow" bindtap="nextWeek">
-      <image src="/res/com_arrow_right.png"/>
+  <view class="head corner">
+    <view class="header weui-flex">
+      <view class="header-btn" bindtap="preWeek">
+        <image style="width: 16px; height: 16px;background-color:#1296db;" src="/res/com_arrow_left.png" />
+      </view>
+      <view class="weui-flex__item header-time">
+        <picker bindchange="bindWeekChange" value="{{dateTitle}}" range="{{weekArr}}">
+          <view>{{weekArr[weekIndex]}}</view>
+        </picker>
+      </view>
+      <view class="header-btn" bindtap="nextWeek">
+        <image style="width: 16px; height: 16px;background-color:#1296db;" src="/res/com_arrow_right.png" />
+      </view>
     </view>
   </view>
-  <view class="head corner">
+  <view class="head corner" style="position: fixed;top: {{dateMarginTop}}px;">
     <view class="weeks left">
       <text>{{month}}</text>
       <text>月</text>
     </view>
-    <view class="week-title" style="width: {{colWidth+6}}px" wx:for="{{dayArr}}" wx:key="week">
+    <view class="week-title" style="width: {{colWidth+6}}px" wx:for="{{title}}" wx:key="week">
       <text>{{item.week}}</text>
       <text>{{item.date}}</text>
     </view>
   </view>
+  <view class="placeholder"></view>
+  <view class="backgroud-img" style="background-image: url('{{bg}}')" />
+  <view class="body">
+    <view class="sidebar corner">
+      <block wx:for="{{16}}">
+        <text>{{item+1}}</text>
+      </block>
+    </view>
+    <view class="contentx">
+      <!-- 循环 每天 -->
+      <view class="column" wx:for="{{courses}}" wx:key="*this">
+        <!-- 循环 -->
+        <block wx:for="{{item}}" wx:key="*this">
+          <view class="course" bindtap="showDetail" data-name="{{item.name}}" data-address="{{item.address}}" data-time="{{item.time}}" data-teacher="{{item.teacher}}" data-id="{{id}}" style="border-radius:5px;text-align:center;background-color: {{item.bg}};opacity:0.6;width:{{colWidth}}px;font-size:12px;height: {{item.height}}px;margin-top: 3px;margin-bottom: 3px;">
+            <view>
+              <text>{{item.name}}</text>
+              <view style="height: 12px"></view>
+              <text>{{item.address}}</text>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+  <ad unit-id="adunit-cba2ca2e8fd1353d" style="position: fixed; bottom:0px"></ad>
 </scroll-view>
 <view class="DrawerClose {{modalName=='viewModal'?'show':''}}" bindtap="hideModal">
   <text class="cuIcon-pullright"></text>
 </view>
 <scroll-view scroll-y class="DrawerWindow {{modalName=='viewModal'?'show':''}}">
-  <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg">
-    <view class="cu-item arrow" wx:for="{{20}}" wx:key="index">
+  <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg" style="margin-top:80px;">
+    <view class="cu-item arrow" bindtap="onUpdateCourse">
       <view class="content">
-        <text class="cuIcon-github text-grey"></text>
-        <text class="text-grey">{{index +1}}</text>
+        <!-- <text class="cuIcon-github text-grey"></text> -->
+        <text class="text-grey">更新数据</text>
+      </view>
+    </view>
+    <view class="cu-item arrow" bindtap="onSetBG">
+      <view class="content">
+        <!-- <text class="cuIcon-github text-grey"></text> -->
+        <text class="text-grey">设置背景</text>
+      </view>
+    </view>
+    <view class="cu-item arrow" bindtap="onFeedback">
+      <view class="content">
+        <text class="text-grey">意见反馈</text>
       </view>
     </view>
   </view>

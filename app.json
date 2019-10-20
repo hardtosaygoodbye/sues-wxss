@@ -2,8 +2,9 @@
   "pages": [
     "pages/course/course",
     "pages/index/index",
-    "pages/me/me",
     "pages/loginSchool/loginSchool",
+    
+    "pages/me/me",
     "pages/tk/tk"
   ],
   "tabBar": {

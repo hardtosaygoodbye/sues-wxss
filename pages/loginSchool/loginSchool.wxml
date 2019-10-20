@@ -1,4 +1,8 @@
 <view xmlns:wx="http://www.w3.org/1999/xhtml" class="page">
+<cu-custom bgColor="bg-gradual-blue" isBack="{{true}}">
+    <view slot="backText">返回</view>
+    <view slot="content">导入课表</view>
+  </cu-custom>
   <form bindsubmit="onImport" class="page__bd">
     <view class="weui-toptips weui-toptips_warn" wx:if="{{showTopTips}}">{{tipes}}</view>
 
