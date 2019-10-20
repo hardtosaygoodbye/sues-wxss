@@ -1,15 +1,15 @@
-<view class="page" xmlns:wx="http://www.w3.org/1999/xhtml">
+<view class="page">
   <cu-custom bgColor="bg-gradual-blue" isBack="{{true}}">
     <view slot="backText">返回</view>
-    <view slot="content">意见反馈</view>
+    <view slot="content">意见反馈及建议</view>
   </cu-custom>
   <view class="page__hd">
-    <view class="page__title">QQ群：470879821</view>
-    <view class="page__desc">欢迎加入工程大课表反馈群</view>
+    <view class="page__title">微信号：onion_rings</view>
+    <view class="page__desc">欢迎向我反馈你遇到的问题或者建议</view>
   </view>
   <view class="page__bd">
     <view class="button-sp-area">
-      <button class="weui-btn" type="default" plain="true" bindtap="copyNUM">复制群号</button>
+      <button class="weui-btn" type="default" plain="true" bindtap="copyNUM">复制微信号</button>
     </view>
   </view>
 </view>

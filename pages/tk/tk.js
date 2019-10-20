@@ -5,7 +5,7 @@ Page({
   },
   copyNUM() {
     wx.setClipboardData({
-      data: '470879821'
+      data: 'onion_rings'
     })
   }
 });

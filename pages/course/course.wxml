@@ -1,7 +1,7 @@
 <scroll-view scroll-y class="DrawerPage {{modalName=='viewModal'?'show':''}}">
   <cu-custom bgColor="bg-gradual-blue" isBack="{{false}}">
     <view slot="backText">返回</view>
-    <view slot="right" class='cu-btn shadow radius bg-green nav-left' bindtap="showModal" data-target="viewModal">
+    <view slot="right" class='cu-btn shadow radius bg-white nav-left' bindtap="showModal" data-target="viewModal">
       导入/设置
     </view>
     <view slot="content">课程表</view>
@@ -76,7 +76,7 @@
     </view>
     <view class="cu-item arrow" bindtap="onFeedback">
       <view class="content">
-        <text class="text-grey">意见反馈</text>
+        <text class="text-grey">意见反馈及建议</text>
       </view>
     </view>
   </view>
