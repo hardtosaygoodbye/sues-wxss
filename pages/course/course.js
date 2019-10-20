@@ -426,16 +426,19 @@ Page({
     this.renderData(this, dateNow);
   },
   onUpdateCourse() {
+    this.hideModal();
     wx.navigateTo({
       url: '/pages/loginSchool/loginSchool',
     });
   },
   onFeedback() {
+    this.hideModal();
     wx.navigateTo({
       url: '/pages/tk/tk',
     })
   },
   onSetBG() {
+    this.hideModal();
     const that = this;
     wx.showActionSheet({
       itemList: ['不使用', '使用系统自带', '从相册中选择'],
