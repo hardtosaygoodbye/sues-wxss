@@ -5,14 +5,14 @@
 	},
 	"setting": {
 		"urlCheck": false,
-		"es6": true,
-		"enhance": true,
+		"es6": false,
 		"postcss": true,
 		"minified": true,
 		"newFeature": true,
-		"coverView": true,
 		"autoAudits": false,
 		"checkInvalidKey": true,
+		"enhance": true,
+		"coverView": true,
 		"checkSiteMap": true,
 		"uploadWithSourceMap": true,
 		"babelSetting": {
