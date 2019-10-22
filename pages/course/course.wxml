@@ -1,36 +1,34 @@
 <scroll-view scroll-y class="DrawerPage {{modalName=='viewModal'?'show':''}}">
+
+  <!-- nav -->
   <cu-custom bgColor="bg-gradual-blue" isBack="{{false}}">
-    <view slot="backText">返回</view>
     <view slot="right" class='cu-btn shadow radius bg-white nav-left' bindtap="showModal" data-target="viewModal">
       导入/设置
     </view>
     <view slot="content">课程表</view>
   </cu-custom>
-  <view class="head corner">
-    <view class="header weui-flex">
-      <view class="header-btn" bindtap="preWeek">
-        <image style="width: 16px; height: 16px;background-color:#1296db;" src="/res/com_arrow_left.png" />
-      </view>
-      <view class="weui-flex__item header-time">
-        <picker bindchange="bindWeekChange" value="{{dateTitle}}" range="{{weekArr}}">
-          <view>{{weekArr[weekIndex]}}</view>
-        </picker>
-      </view>
-      <view class="header-btn" bindtap="nextWeek">
-        <image style="width: 16px; height: 16px;background-color:#1296db;" src="/res/com_arrow_right.png" />
-      </view>
-    </view>
+
+  <!-- week -->
+  <view class="week-container">
+    <image src="/res/com_arrow_left.png" bindtap="bindPreWeek" />
+    <picker class="weui-flex__item header-time" bindchange="bindWeekChange" value="{{dateTitle}}" range="{{weekArr}}">
+      <view>{{weekArr[weekIndex]}}</view>
+    </picker>
+    <image src="/res/com_arrow_right.png" bindtap="bindNextWeek" />
   </view>
-  <view class="head corner" style="position: fixed;top: {{dateMarginTop}}px;">
-    <view class="weeks left">
+
+  <!-- day -->
+  <view class="day-container">
+    <view class="day-item">
       <text>{{month}}</text>
       <text>月</text>
     </view>
-    <view class="week-title" style="width: {{colWidth+6}}px" wx:for="{{title}}" wx:key="week">
+    <view class="day-item" style="width: {{colWidth+6}}px" wx:for="{{title}}">
       <text>{{item.week}}</text>
       <text>{{item.date}}</text>
     </view>
   </view>
+
   <view class="placeholder"></view>
   <view class="backgroud-img" style="background-image: url('{{bg}}')" />
   <view class="body">
@@ -57,6 +55,7 @@
   </view>
   <ad unit-id="adunit-cba2ca2e8fd1353d" style="position: fixed; bottom:0px"></ad>
 </scroll-view>
+<!-- 侧边栏 -->
 <view class="DrawerClose {{modalName=='viewModal'?'show':''}}" bindtap="hideModal">
   <text class="cuIcon-pullright"></text>
 </view>

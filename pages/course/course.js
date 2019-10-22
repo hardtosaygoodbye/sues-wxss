@@ -101,11 +101,11 @@ Page({
     });
     this.renderData(this, dateNow);
   },
-  preWeek() {
+  bindPreWeek() {
     dateNow = new Date(dateNow.getTime() - 7 * 24 * 60 * 60 * 1000);
     this.renderData(this, dateNow);
   },
-  nextWeek() {
+  bindNextWeek() {
     dateNow = new Date(dateNow.getTime() + 7 * 24 * 60 * 60 * 1000);
     this.renderData(this, dateNow);
   },
