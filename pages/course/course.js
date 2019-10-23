@@ -430,13 +430,13 @@ Page({
     dateNow = new Date(year, month, date);
     this.renderData(this, dateNow);
   },
-  onUpdateCourse() {
+  bindUpdateCourse() {
     this.hideModal();
     wx.navigateTo({
       url: '/pages/loginSchool/loginSchool',
     });
   },
-  onFeedback() {
+  bindFeedback() {
     this.hideModal();
     wx.navigateTo({
       url: '/pages/tk/tk',

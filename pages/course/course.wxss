@@ -78,6 +78,12 @@ page {
   z-index: -1;
 }
 
+.ad-bottom {
+  position: fixed; 
+  bottom:0px; 
+  left:0px; 
+  right: 0px
+}
 
 .corner {
   font-size: 9pt;
