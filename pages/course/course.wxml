@@ -54,7 +54,12 @@
       </view>
     </view>
   </scroll-view>
-  <ad unit-id="adunit-cba2ca2e8fd1353d" class="ad-container"></ad>
+  <view class="ad-container">
+    <view class="ad-item">
+      <ad unit-id="adunit-cba2ca2e8fd1353d"></ad>
+    </view>
+  </view>
+
 </scroll-view>
 <!-- 侧边栏 -->
 <view class="DrawerClose {{modalName=='viewModal'?'show':''}}" bindtap="hideModal">

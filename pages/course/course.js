@@ -21,17 +21,16 @@ Page({
     weekArr: [],
     month: 0,
     colWidth: 60,
-    palette: ['#1abc9c5f', '#3498db5f', '#9b59b65f', '#f1c40f5f', '#e67e225f', '#e74c3c5f'],
+    palette: ['#1abc9c7f', '#3498db7f', '#9b59b67f', '#f1c40f7f', '#e67e227f', '#e74c3c7f'],
     courses: [],
     bgImg: defaultBg,
   },
-  getUserInfo: function(e) {
-    console.log(e)
+  getUserInfo(e) {
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
       userInfo: e.detail.userInfo,
       hasUserInfo: true
-    })
+    });
   },
   showModal(e) {
     this.setData({
@@ -171,10 +170,7 @@ Page({
     const dateStartStr = dateS.getFullYear() + '年' + (dateS.getMonth() + 1) + '月' + dateS.getDate() + '日';
     const dateEndStr = dateE.getFullYear() + '年' + (dateE.getMonth() + 1) + '月' + dateE.getDate() + '日';
     return dateStartStr + ' ~ ' + dateEndStr;
-  }
-
-  // 获取是一年中的第几周
-  ,
+  },
   getWeekOfYear: (date) => {
       var firstDay = new Date(date.getFullYear(), 0, 1);
       var dayOfWeek = firstDay.getDay();
