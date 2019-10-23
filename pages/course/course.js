@@ -2,6 +2,8 @@
 //获取应用实例
 const app = getApp();
 const dayArrStr = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+const defaultBg = '/res/default_bg.jpg'
+
 let dateNow = new Date();
 Page({
   data: {
@@ -41,8 +43,7 @@ Page({
     colWidth: 60,
     palette: ['#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e67e22', '#e74c3c'],
     courses: [],
-    bg: '',
-    dateMarginTop: 50
+    bgImg: defaultBg,
   },
   getUserInfo: function (e) {
     console.log(e)
@@ -70,8 +71,12 @@ Page({
     })
   },
   onLoad() {
+    let bgImg = wx.getStorageSync('bgImg')
+    if (!bgImg) {
+      bgImg = defaultBg;
+    }
     this.setData({
-      dateMarginTop: wx.getMenuButtonBoundingClientRect().top + 68
+      bgImg: bgImg
     })
     wx.showShareMenu()
     const course = wx.getStorageSync('course');
@@ -437,24 +442,18 @@ Page({
       url: '/pages/tk/tk',
     })
   },
-  onSetBG() {
+  bindSetBg() {
     this.hideModal();
-    const that = this;
+    const self = this;
     wx.showActionSheet({
       itemList: ['不使用', '使用系统自带', '从相册中选择'],
       success: (e) => {
         switch (e.tapIndex) {
           case 0:
-            wx.setStorageSync('bg', '');
-            wx.showToast({
-              title: '设置成功！'
-            });
+            self.setBgImg('');
             break;
           case 1:
-            wx.setStorageSync('bg', app.globalData.bg);
-            wx.showToast({
-              title: '设置成功！'
-            });
+            self.setBgImg(defaultBg);
             break;
           case 2:
             wx.chooseImage({
@@ -462,26 +461,20 @@ Page({
               sizeType: ['compressed'],
               sourceType: ['album', 'camera'],
               success(res) {
-                wx.showLoading({
-                  title: '处理中',
-                  mask: true
-                });
-                const tempFilePaths = res.tempFilePaths;
-                let imgPath = tempFilePaths[0];
-                let imgHZ = imgPath.split('.');
-                imgHZ = imgHZ[imgHZ.length - 1];
-                const base64 = wx.getFileSystemManager().readFileSync(imgPath, 'base64');
-                const img_base64 = 'data:image/' + imgHZ + ';base64,' + base64;
-                wx.setStorageSync('bg', img_base64);
-                wx.hideLoading();
-                wx.showToast({
-                  title: '设置成功！'
-                });
+                const imgPath = res.tempFilePaths[0];
+                self.setBgImg(imgPath);
               }
             });
             break;
         }
       }
     });
+  },
+  setBgImg(bgImg) {
+    wx.setStorageSync('bgImg', bgImg);
+    this.setData({
+      bgImg: bgImg
+    });
+    wx.showToast({ title: '设置成功！' });
   }
 })
