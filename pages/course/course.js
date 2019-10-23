@@ -374,7 +374,6 @@ Page({
     arr.sort(function(a, b) { //对数组进行排序才能方便比较
       return a - b;
     });
-
     function loop(index) {
       if (index >= 1) {
         if (arr[index] === arr[index - 1]) {
@@ -383,7 +382,6 @@ Page({
         loop(index - 1); //递归loop函数进行去重
       }
     }
-
     loop(len - 1);
     return arr;
   },
@@ -447,7 +445,7 @@ Page({
       bgImg: bgImg
     });
     wx.showToast({
-      title: '设置成功！'
+      title: '壁纸更换成功！'
     });
   }
 })
