@@ -42,7 +42,7 @@
         <view class="column" wx:for="{{courses}}" wx:key="*this">
           <!-- 循环 -->
           <block wx:for="{{item}}" wx:key="*this">
-            <view class="course" bindtap="showDetail" data-name="{{item.name}}" data-address="{{item.address}}" data-time="{{item.time}}" data-teacher="{{item.teacher}}" data-id="{{id}}" style="background-color: {{item.bg}};width:{{colWidth}}px;height: {{item.height}}px;">
+            <view class="course" bindtap="showDetail" data-name="{{item.name}}" data-address="{{item.address}}" data-teacher="{{item.teacher}}" data-id="{{id}}" style="background-color: {{item.bg}};width:{{colWidth}}px;height: {{item.height}}px;">
               <view>
                 <text>{{item.name}}</text>
                 <view style="height: 12px"></view>
