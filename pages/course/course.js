@@ -102,7 +102,7 @@ Page({
       title.push({
         week: dayArrStr[i],
         date: weekIndex[i]
-      })
+      });
     }
 
     this.setData({
@@ -136,15 +136,15 @@ Page({
     const month = date.getMonth() + 1;
     let day = date.getDay();
     if (day === 0) day = 7;
-    const tsStart = ts - (day - 1) * 24 * 60 * 60 * 1000;
-    const tsEnd = ts + (7 - day) * 24 * 60 * 60 * 1000;
+    const tsStart = ts - (day - 1) * oneDayDuration;
+    const tsEnd = ts + (7 - day) * oneDayDuration;
     const dateS = new Date(tsStart);
     const dateE = new Date(tsEnd);
     const dateStartStr = dateS.getFullYear() + '.' + (dateS.getMonth() + 1) + '.' + dateS.getDate();
     const dateEndStr = dateE.getFullYear() + '.' + (dateE.getMonth() + 1) + '.' + dateE.getDate();
     return dateStartStr + ' ~ ' + dateEndStr;
   },
-  getWeekOfYear: (date) => {
+  getWeekOfYear(date) {
     let firstDay = new Date(date.getFullYear(), 0, 1);
     let dayOfWeek = firstDay.getDay();
     let spendDay = 1;
@@ -156,7 +156,7 @@ Page({
     let result = Math.ceil(d / 7);
     return result + 1;
   },
-  renderCourses: function(res, date) {
+  renderCourses(res, date) {
     const weekNumNow = this.getWeekOfYear(date);
     let courses = [];
     for (let i = 0; i < 7; i++) {
@@ -232,11 +232,11 @@ Page({
               week: dayArrStr[i],
               name: name,
               teacher: lastCourse.teacher,
-              address: lastCourse.address.replace('(中外教室）', ''),
+              address: lastCourse.address,
               timeorg: time,
               bg: lastCourse.bg,
               height: height
-            })
+            });
           } else {
             // 没课
             newDayCourses.push({
@@ -245,7 +245,7 @@ Page({
               address: '',
               bg: '#ffffff00',
               height: height
-            })
+            });
           }
           lastCourse = course;
           lastTime = [];
@@ -259,21 +259,20 @@ Page({
       courses: courses
     });
   },
-  showDetail: e => {
+  showDetail(e) {
     const course = e.currentTarget.dataset;
-    if (course.name !== '') {
-      wx.showModal({
-        title: course.name,
-        content: course.address + ' ' + course.teacher,
-        confirmText: '好',
-        showCancel: false
-      });
-    }
+    if (!course.name.length) return;
+    wx.showModal({
+      title: course.name,
+      content: course.address + ' ' + course.teacher,
+      confirmText: '好',
+      showCancel: false
+    });
   },
-  rnd: (n, m) => {
+  rnd(n, m) {
     return Math.floor(Math.random() * (m - n + 1) + n);
   },
-  isInArray: (arr, value) => {
+  isInArray(arr, value) {
     for (let i = 0; i < arr.length; i++) {
       if (value === arr[i]) {
         return true;
@@ -311,7 +310,7 @@ Page({
     const c = b[1].split('日');
     const date = parseInt(c[0]);
     dateNow = new Date(year, month, date);
-    this.renderData(this, dateNow);
+    this.renderData(dateNow);
   },
   bindUpdateCourse() {
     this.hideModal();
@@ -323,7 +322,7 @@ Page({
     this.hideModal();
     wx.navigateTo({
       url: '/pages/tk/tk'
-    })
+    });
   },
   bindSetBg() {
     this.hideModal();
