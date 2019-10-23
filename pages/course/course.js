@@ -1,10 +1,9 @@
-//index.js
-//获取应用实例
 const app = getApp();
 const dayArrStr = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 const defaultBg = '/res/default_bg.jpg'
-
+const palette = ['#1abc9c7f', '#3498db7f', '#9b59b67f', '#f1c40f7f', '#e67e227f', '#e74c3c7f'];
 let dateNow = new Date();
+
 Page({
   data: {
     StatusBar: app.globalData.StatusBar,
@@ -15,13 +14,12 @@ Page({
     TabCur: 1,
     scrollLeft: 0,
 
-    courseScrollHeight: 300,
+    courseScrollHeight: 0,
     title: [],
     weekIndex: 0,
     weekArr: [],
     month: 0,
     colWidth: 60,
-    palette: ['#1abc9c7f', '#3498db7f', '#9b59b67f', '#f1c40f7f', '#e67e227f', '#e74c3c7f'],
     courses: [],
     bgImg: defaultBg,
   },
@@ -43,7 +41,6 @@ Page({
     })
   },
   tabSelect(e) {
-    console.log(e);
     this.setData({
       TabCur: e.currentTarget.dataset.id,
       scrollLeft: (e.currentTarget.dataset.id - 1) * 60
@@ -172,23 +169,53 @@ Page({
     return dateStartStr + ' ~ ' + dateEndStr;
   },
   getWeekOfYear: (date) => {
-      var firstDay = new Date(date.getFullYear(), 0, 1);
-      var dayOfWeek = firstDay.getDay();
-      var spendDay = 1;
-      if (dayOfWeek !== 0) {
-        spendDay = 7 - dayOfWeek + 1;
-      }
-      firstDay = new Date(date.getFullYear(), 0, 1 + spendDay);
-      var d = Math.ceil((date.valueOf() - firstDay.valueOf()) / 86400000);
-      var result = Math.ceil(d / 7);
-      return result + 1;
+    var firstDay = new Date(date.getFullYear(), 0, 1);
+    var dayOfWeek = firstDay.getDay();
+    var spendDay = 1;
+    if (dayOfWeek !== 0) {
+      spendDay = 7 - dayOfWeek + 1;
     }
-
-    // 渲染课表
-    ,
+    firstDay = new Date(date.getFullYear(), 0, 1 + spendDay);
+    var d = Math.ceil((date.valueOf() - firstDay.valueOf()) / 86400000);
+    var result = Math.ceil(d / 7);
+    return result + 1;
+  },
   renderCourses: function(res, date) {
-      const weekNumNow = this.getWeekOfYear(date);
-      let courses = [
+    const weekNumNow = this.getWeekOfYear(date);
+    let courses = [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ];
+    for (let i = 0, l = res.length; i < l; i++) {
+      const r = res[i];
+      const week = r.week;
+      if (week.substr(weekNumNow - 1, 1) === '1') {
+        courses[r.index].push({
+          name: r.name,
+          teacher: r.teacher,
+          address: r.address,
+          time: r.time,
+          bg: palette[(parseInt(r.time.split(',')[0]) + parseInt(r.index)) % 6]
+        })
+      }
+    }
+    // 上下位置参数
+    for (let i = 0, l = courses.length; i < l; i++) {
+      const dayCourses = courses[i];
+      let timeSet = [];
+      let dataSet = [
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
         [],
         [],
         [],
@@ -197,122 +224,86 @@ Page({
         [],
         []
       ];
-      for (let i = 0, l = res.length; i < l; i++) {
-        const r = res[i];
-        const week = r.week;
-        if (week.substr(weekNumNow - 1, 1) === '1') {
-          courses[r.index].push({
-            name: r.name,
-            teacher: r.teacher,
-            address: r.address,
-            time: r.time,
-            bg: this.data.palette[(parseInt(r.time.split(',')[0]) + parseInt(r.index)) % 6]
-          })
+      for (let m = 0, n = dayCourses.length; m < n; m++) {
+        const course = dayCourses[m];
+        const time = course.time.split(',');
+        for (let j = 0, k = time.length; j < k; j++) {
+          timeSet.push(parseInt(time[j]));
+          dataSet[parseInt(time[j])] = course;
         }
       }
-      // 上下位置参数
-      for (let i = 0, l = courses.length; i < l; i++) {
-        const dayCourses = courses[i];
-        let timeSet = [];
-        let dataSet = [
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          [],
-          []
-        ];
-        for (let m = 0, n = dayCourses.length; m < n; m++) {
-          const course = dayCourses[m];
-          const time = course.time.split(',');
-          for (let j = 0, k = time.length; j < k; j++) {
-            timeSet.push(parseInt(time[j]));
-            dataSet[parseInt(time[j])] = course;
-          }
+      let newCourses = [];
+      for (let m = 0, n = 14; m < n; m++) {
+        if (this.isInArray(timeSet, m)) {
+          newCourses.push(dataSet[m]);
+        } else {
+          newCourses.push({});
         }
-        let newCourses = [];
-        for (let m = 0, n = 14; m < n; m++) {
-          if (this.isInArray(timeSet, m)) {
-            newCourses.push(dataSet[m]);
-          } else {
-            newCourses.push({});
+      }
+      // 得到包含14个元素的数组（newCourses），没课则空，有课则有数据
+      // 判断是否要合并，并提供相关CSS参数
+      let lastCourse = newCourses[0];
+      let lastTime = [];
+      let sameNum = 0;
+      let newDayCourses = [];
+      let ifFirst = 1;
+      for (let m = 0, n = 14; m < n; m++) {
+        const course = newCourses[m];
+        if (course.name === lastCourse.name && m !== 13) {
+          sameNum++;
+          if (course.hasOwnProperty('time')) {
+            lastTime = lastTime.concat(course.time.split(','));
           }
-        }
-        // 得到包含14个元素的数组（newCourses），没课则空，有课则有数据
-        // 判断是否要合并，并提供相关CSS参数
-        let lastCourse = newCourses[0];
-        let lastTime = [];
-        let sameNum = 0;
-        let newDayCourses = [];
-        let ifFirst = 1;
-        for (let m = 0, n = 14; m < n; m++) {
-          const course = newCourses[m];
-          if (course.name === lastCourse.name && m !== 13) {
+        } else {
+          if (m === 13)
             sameNum++;
-            if (course.hasOwnProperty('time')) {
-              lastTime = lastTime.concat(course.time.split(','));
+          const height = 60 * (1 + sameNum) - 6 - 60 * ifFirst;
+          // 结算上一段一样的课
+          if (lastCourse.hasOwnProperty('name')) {
+            if (lastTime.length === 0) {
+              lastTime = ["12", "13"]
             }
+            const time = this.distinctArr(lastTime);
+            const timeStart = this.index2Time(time[0], lastCourse.address, true);
+            const timeEnd = this.index2Time(time[time.length - 1], lastCourse.address, false);
+            let name = lastCourse.name;
+            if (name.length > 12) {
+              name = name.substr(0, 11) + '…'
+            }
+            // 有课
+            newDayCourses.push({
+              week: dayArrStr[i],
+              name: name,
+              teacher: lastCourse.teacher,
+              address: lastCourse.address.replace('(中外教室）', ''),
+              time: timeStart + ' ~ ' + timeEnd,
+              timeorg: time,
+              bg: lastCourse.bg,
+              height: height
+            })
           } else {
-            if (m === 13)
-              sameNum++;
-            const height = 60 * (1 + sameNum) - 6 - 60 * ifFirst;
-            // 结算上一段一样的课
-            if (lastCourse.hasOwnProperty('name')) {
-              if (lastTime.length === 0) {
-                lastTime = ["12", "13"]
-              }
-              const time = this.distinctArr(lastTime);
-              const timeStart = this.index2Time(time[0], lastCourse.address, true);
-              const timeEnd = this.index2Time(time[time.length - 1], lastCourse.address, false);
-              let name = lastCourse.name;
-              if (name.length > 12) {
-                name = name.substr(0, 11) + '…'
-              }
-              // 有课
-              newDayCourses.push({
-                week: dayArrStr[i],
-                name: name,
-                teacher: lastCourse.teacher,
-                address: lastCourse.address.replace('(中外教室）', ''),
-                time: timeStart + ' ~ ' + timeEnd,
-                timeorg: time,
-                bg: lastCourse.bg,
-                height: height
-              })
-            } else {
-              // 没课
-              newDayCourses.push({
-                name: '',
-                teacher: '',
-                address: '',
-                time: '',
-                bg: '#ffffff00',
-                height: height
-              })
-            }
-            lastCourse = course;
-            lastTime = [];
-            sameNum = 0;
-            ifFirst = 0;
+            // 没课
+            newDayCourses.push({
+              name: '',
+              teacher: '',
+              address: '',
+              time: '',
+              bg: '#ffffff00',
+              height: height
+            })
           }
+          lastCourse = course;
+          lastTime = [];
+          sameNum = 0;
+          ifFirst = 0;
         }
-        courses[i] = newDayCourses;
       }
-      this.setData({
-        courses: courses
-      });
+      courses[i] = newDayCourses;
     }
-
-    // 原始数据解析成上课时间
-    ,
+    this.setData({
+      courses: courses
+    });
+  },
   index2Time(index, address, start = true) {
     switch (parseInt(index)) {
       case 0:
