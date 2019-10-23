@@ -62,7 +62,7 @@
   <view class="cu-list menu card-menu margin-top-xl margin-bottom-xl shadow-lg" style="margin-top:80px;">
     <view class="cu-item arrow" bindtap="bindUpdateCourse">
       <view class="content">
-        <text class="text-grey">更新数据</text>
+        <text class="text-grey">导入课程信息</text>
       </view>
     </view>
     <view class="cu-item arrow" bindtap="bindSetBg">
