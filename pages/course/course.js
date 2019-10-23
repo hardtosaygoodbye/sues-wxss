@@ -2,7 +2,8 @@ const app = getApp();
 const dayArrStr = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 const defaultBg = '/res/default_bg.jpg'
 const palette = ['#1abc9c7f', '#3498db7f', '#9b59b67f', '#f1c40f7f', '#e67e227f', '#e74c3c7f'];
-const oneWeekDuration = 7 * 24 * 60 * 60 * 1000;
+const oneDayDuration = 24 * 60 * 60 * 1000;
+const oneWeekDuration = 7 * oneDayDuration;
 let dateNow = new Date();
 
 Page({
@@ -24,29 +25,6 @@ Page({
     courses: [],
     bgImg: defaultBg,
   },
-  getUserInfo(e) {
-    app.globalData.userInfo = e.detail.userInfo
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    });
-  },
-  showModal(e) {
-    this.setData({
-      modalName: e.currentTarget.dataset.target
-    })
-  },
-  hideModal(e) {
-    this.setData({
-      modalName: null
-    })
-  },
-  tabSelect(e) {
-    this.setData({
-      TabCur: e.currentTarget.dataset.id,
-      scrollLeft: (e.currentTarget.dataset.id - 1) * 60
-    })
-  },
   onLoad() {
     // 壁纸
     let bgImg = wx.getStorageSync('bgImg')
@@ -61,12 +39,13 @@ Page({
       courseScrollHeight: wx.getSystemInfoSync().windowHeight - 70 - app.globalData.CustomBar
     });
     wx.showShareMenu();
+
     const course = wx.getStorageSync('course');
     app.globalData.course = course ? course : [];
     const startDate = new Date(dateNow.getFullYear() - 1, 8, 1).getTime();
     const endDate = new Date(dateNow.getFullYear() + 1, 7, 1).getTime();
     let weekArr = [];
-    for (let i = startDate; i <= endDate; i += 7 * 24 * 60 * 60 * 1000) {
+    for (let i = startDate; i <= endDate; i += oneWeekDuration) {
       weekArr.push(this.calTimeInterval(new Date(i)));
     }
     dateNow = new Date();
@@ -99,8 +78,8 @@ Page({
     const month = date.getMonth() + 1;
     let day = date.getDay();
     if (day === 0) day = 7;
-    const tsStart = ts - (day - 1) * 24 * 60 * 60 * 1000;
-    const tsEnd = ts + (7 - day) * 24 * 60 * 60 * 1000;
+    const tsStart = ts - (day - 1) * oneDayDuration;
+    const tsEnd = ts + (7 - day) * oneDayDuration;
     const dateS = new Date(tsStart);
     const dateE = new Date(tsEnd);
     const dateStart = dateS.getDate();
@@ -166,15 +145,15 @@ Page({
     return dateStartStr + ' ~ ' + dateEndStr;
   },
   getWeekOfYear: (date) => {
-    var firstDay = new Date(date.getFullYear(), 0, 1);
-    var dayOfWeek = firstDay.getDay();
-    var spendDay = 1;
+    let firstDay = new Date(date.getFullYear(), 0, 1);
+    let dayOfWeek = firstDay.getDay();
+    let spendDay = 1;
     if (dayOfWeek !== 0) {
       spendDay = 7 - dayOfWeek + 1;
     }
     firstDay = new Date(date.getFullYear(), 0, 1 + spendDay);
-    var d = Math.ceil((date.valueOf() - firstDay.valueOf()) / 86400000);
-    var result = Math.ceil(d / 7);
+    let d = Math.ceil((date.valueOf() - firstDay.valueOf()) / 86400000);
+    let result = Math.ceil(d / 7);
     return result + 1;
   },
   renderCourses: function(res, date) {
@@ -295,21 +274,20 @@ Page({
     return Math.floor(Math.random() * (m - n + 1) + n);
   },
   isInArray: (arr, value) => {
-      for (let i = 0; i < arr.length; i++) {
-        if (value === arr[i]) {
-          return true;
-        }
+    for (let i = 0; i < arr.length; i++) {
+      if (value === arr[i]) {
+        return true;
       }
-      return false;
     }
-
-    // 数组去重
-    ,
+    return false;
+  },
+  // 数组去重
   distinctArr: (arr) => {
     let len = arr.length;
     arr.sort(function(a, b) { //对数组进行排序才能方便比较
       return a - b;
     });
+
     function loop(index) {
       if (index >= 1) {
         if (arr[index] === arr[index - 1]) {
@@ -344,7 +322,7 @@ Page({
   bindFeedback() {
     this.hideModal();
     wx.navigateTo({
-      url: '/pages/tk/tk',
+      url: '/pages/tk/tk'
     })
   },
   bindSetBg() {
@@ -383,5 +361,28 @@ Page({
     wx.showToast({
       title: '壁纸更换成功！'
     });
+  },
+  getUserInfo(e) {
+    app.globalData.userInfo = e.detail.userInfo
+    this.setData({
+      userInfo: e.detail.userInfo,
+      hasUserInfo: true
+    });
+  },
+  showModal(e) {
+    this.setData({
+      modalName: e.currentTarget.dataset.target
+    })
+  },
+  hideModal(e) {
+    this.setData({
+      modalName: null
+    })
+  },
+  tabSelect(e) {
+    this.setData({
+      TabCur: e.currentTarget.dataset.id,
+      scrollLeft: (e.currentTarget.dataset.id - 1) * 60
+    })
   }
 })
