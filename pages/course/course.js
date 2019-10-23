@@ -2,6 +2,7 @@ const app = getApp();
 const dayArrStr = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 const defaultBg = '/res/default_bg.jpg'
 const palette = ['#1abc9c7f', '#3498db7f', '#9b59b67f', '#f1c40f7f', '#e67e227f', '#e74c3c7f'];
+const oneWeekDuration = 7 * 24 * 60 * 60 * 1000;
 let dateNow = new Date();
 
 Page({
@@ -81,21 +82,18 @@ Page({
       // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
       updateManager.applyUpdate();
     });
-    const bg = wx.getStorageSync('bg');
-    this.setData({
-      bg: bg
-    });
-    this.renderData(this, dateNow);
+    this.renderData(dateNow);
   },
   bindPreWeek() {
-    dateNow = new Date(dateNow.getTime() - 7 * 24 * 60 * 60 * 1000);
-    this.renderData(this, dateNow);
+    dateNow = new Date(dateNow.getTime() - oneWeekDuration);
+    this.renderData(dateNow);
   },
   bindNextWeek() {
-    dateNow = new Date(dateNow.getTime() + 7 * 24 * 60 * 60 * 1000);
-    this.renderData(this, dateNow);
+    dateNow = new Date(dateNow.getTime() + oneWeekDuration);
+    this.renderData(dateNow);
   },
-  renderData(that, date) {
+  renderData(date) {
+    let self = this;
     const colWidth = (wx.getSystemInfoSync().windowWidth - 20) / 7 - 6;
     const ts = date.getTime();
     const month = date.getMonth() + 1;
@@ -128,15 +126,15 @@ Page({
       })
     }
 
-    that.setData({
-      weekIndex: that.data.weekArr.indexOf(that.calTimeInterval(date)),
+    this.setData({
+      weekIndex: self.data.weekArr.indexOf(self.calTimeInterval(date)),
       colWidth: colWidth,
       month: month,
       title: title
     });
     if (app.globalData.course.length > 0) {
       // 有数据，加载课表
-      that.renderCourses(app.globalData.course, date);
+      this.renderCourses(app.globalData.course, date);
     } else {
       // 没有数据，提示登录
       wx.showModal({
@@ -158,14 +156,13 @@ Page({
     const ts = date.getTime();
     const month = date.getMonth() + 1;
     let day = date.getDay();
-    if (day === 0)
-      day = 7;
+    if (day === 0) day = 7;
     const tsStart = ts - (day - 1) * 24 * 60 * 60 * 1000;
     const tsEnd = ts + (7 - day) * 24 * 60 * 60 * 1000;
     const dateS = new Date(tsStart);
     const dateE = new Date(tsEnd);
-    const dateStartStr = dateS.getFullYear() + '年' + (dateS.getMonth() + 1) + '月' + dateS.getDate() + '日';
-    const dateEndStr = dateE.getFullYear() + '年' + (dateE.getMonth() + 1) + '月' + dateE.getDate() + '日';
+    const dateStartStr = dateS.getFullYear() + '.' + (dateS.getMonth() + 1) + '.' + dateS.getDate();
+    const dateEndStr = dateE.getFullYear() + '.' + (dateE.getMonth() + 1) + '.' + dateE.getDate();
     return dateStartStr + ' ~ ' + dateEndStr;
   },
   getWeekOfYear: (date) => {
@@ -182,15 +179,10 @@ Page({
   },
   renderCourses: function(res, date) {
     const weekNumNow = this.getWeekOfYear(date);
-    let courses = [
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ];
+    let courses = [];
+    for (let i = 0; i < 7; i++) {
+      courses.push([]);
+    }
     for (let i = 0, l = res.length; i < l; i++) {
       const r = res[i];
       const week = r.week;
@@ -208,22 +200,10 @@ Page({
     for (let i = 0, l = courses.length; i < l; i++) {
       const dayCourses = courses[i];
       let timeSet = [];
-      let dataSet = [
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        []
-      ];
+      let dataSet = [];
+      for (let i = 0; i < 14; i++) {
+        dataSet.push([]);
+      }
       for (let m = 0, n = dayCourses.length; m < n; m++) {
         const course = dayCourses[m];
         const time = course.time.split(',');
