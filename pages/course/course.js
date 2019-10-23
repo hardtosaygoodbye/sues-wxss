@@ -15,37 +15,17 @@ Page({
     TabCur: 1,
     scrollLeft: 0,
 
-    title: [{
-      "week": "周一",
-      "date": "17日"
-    }, {
-      "week": "周二",
-      "date": "18日"
-    }, {
-      "week": "周三",
-      "date": "19日"
-    }, {
-      "week": "周四",
-      "date": "20日"
-    }, {
-      "week": "周五",
-      "date": "21日"
-    }, {
-      "week": "周六",
-      "date": "22日"
-    }, {
-      "week": "周日",
-      "date": "23日"
-    }],
+    courseScrollHeight: 300,
+    title: [],
     weekIndex: 0,
     weekArr: [],
     month: 0,
     colWidth: 60,
-    palette: ['#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e67e22', '#e74c3c'],
+    palette: ['#1abc9c5f', '#3498db5f', '#9b59b65f', '#f1c40f5f', '#e67e225f', '#e74c3c5f'],
     courses: [],
     bgImg: defaultBg,
   },
-  getUserInfo: function (e) {
+  getUserInfo: function(e) {
     console.log(e)
     app.globalData.userInfo = e.detail.userInfo
     this.setData({
@@ -71,14 +51,19 @@ Page({
     })
   },
   onLoad() {
+    // 壁纸
     let bgImg = wx.getStorageSync('bgImg')
     if (!bgImg) {
       bgImg = defaultBg;
     }
     this.setData({
       bgImg: bgImg
-    })
-    wx.showShareMenu()
+    });
+    // 课程scrollview高度
+    this.setData({
+      courseScrollHeight: wx.getSystemInfoSync().windowHeight - 70 - app.globalData.CustomBar
+    });
+    wx.showShareMenu();
     const course = wx.getStorageSync('course');
     app.globalData.course = course ? course : [];
     const startDate = new Date(dateNow.getFullYear() - 1, 8, 1).getTime();
@@ -96,7 +81,7 @@ Page({
   },
   onShow() {
     const updateManager = wx.getUpdateManager();
-    updateManager.onUpdateReady(function () {
+    updateManager.onUpdateReady(function() {
       // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
       updateManager.applyUpdate();
     });
@@ -119,8 +104,7 @@ Page({
     const ts = date.getTime();
     const month = date.getMonth() + 1;
     let day = date.getDay();
-    if (day === 0)
-      day = 7;
+    if (day === 0) day = 7;
     const tsStart = ts - (day - 1) * 24 * 60 * 60 * 1000;
     const tsEnd = ts + (7 - day) * 24 * 60 * 60 * 1000;
     const dateS = new Date(tsStart);
@@ -192,56 +176,23 @@ Page({
   // 获取是一年中的第几周
   ,
   getWeekOfYear: (date) => {
-    var firstDay = new Date(date.getFullYear(), 0, 1);
-    var dayOfWeek = firstDay.getDay();
-    var spendDay = 1;
-    if (dayOfWeek !== 0) {
-      spendDay = 7 - dayOfWeek + 1;
-    }
-    firstDay = new Date(date.getFullYear(), 0, 1 + spendDay);
-    var d = Math.ceil((date.valueOf() - firstDay.valueOf()) / 86400000);
-    var result = Math.ceil(d / 7);
-    return result + 1;
-  }
-
-  // 渲染课表
-  ,
-  renderCourses: function (res, date) {
-    const weekNumNow = this.getWeekOfYear(date);
-    let courses = [
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      []
-    ];
-    for (let i = 0, l = res.length; i < l; i++) {
-      const r = res[i];
-      const week = r.week;
-      if (week.substr(weekNumNow - 1, 1) === '1') {
-        courses[r.index].push({
-          name: r.name,
-          teacher: r.teacher,
-          address: r.address,
-          time: r.time,
-          bg: this.data.palette[(parseInt(r.time.split(',')[0]) + parseInt(r.index)) % 6]
-        })
+      var firstDay = new Date(date.getFullYear(), 0, 1);
+      var dayOfWeek = firstDay.getDay();
+      var spendDay = 1;
+      if (dayOfWeek !== 0) {
+        spendDay = 7 - dayOfWeek + 1;
       }
+      firstDay = new Date(date.getFullYear(), 0, 1 + spendDay);
+      var d = Math.ceil((date.valueOf() - firstDay.valueOf()) / 86400000);
+      var result = Math.ceil(d / 7);
+      return result + 1;
     }
-    // 上下位置参数
-    for (let i = 0, l = courses.length; i < l; i++) {
-      const dayCourses = courses[i];
-      let timeSet = [];
-      let dataSet = [
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
-        [],
+
+    // 渲染课表
+    ,
+  renderCourses: function(res, date) {
+      const weekNumNow = this.getWeekOfYear(date);
+      let courses = [
         [],
         [],
         [],
@@ -250,89 +201,122 @@ Page({
         [],
         []
       ];
-      for (let m = 0, n = dayCourses.length; m < n; m++) {
-        const course = dayCourses[m];
-        const time = course.time.split(',');
-        for (let j = 0, k = time.length; j < k; j++) {
-          timeSet.push(parseInt(time[j]));
-          dataSet[parseInt(time[j])] = course;
+      for (let i = 0, l = res.length; i < l; i++) {
+        const r = res[i];
+        const week = r.week;
+        if (week.substr(weekNumNow - 1, 1) === '1') {
+          courses[r.index].push({
+            name: r.name,
+            teacher: r.teacher,
+            address: r.address,
+            time: r.time,
+            bg: this.data.palette[(parseInt(r.time.split(',')[0]) + parseInt(r.index)) % 6]
+          })
         }
       }
-      let newCourses = [];
-      for (let m = 0, n = 14; m < n; m++) {
-        if (this.isInArray(timeSet, m)) {
-          newCourses.push(dataSet[m]);
-        } else {
-          newCourses.push({});
-        }
-      }
-      // 得到包含14个元素的数组（newCourses），没课则空，有课则有数据
-      // 判断是否要合并，并提供相关CSS参数
-      let lastCourse = newCourses[0];
-      let lastTime = [];
-      let sameNum = 0;
-      let newDayCourses = [];
-      let ifFirst = 1;
-      for (let m = 0, n = 14; m < n; m++) {
-        const course = newCourses[m];
-        if (course.name === lastCourse.name && m !== 13) {
-          sameNum++;
-          if (course.hasOwnProperty('time')) {
-            lastTime = lastTime.concat(course.time.split(','));
+      // 上下位置参数
+      for (let i = 0, l = courses.length; i < l; i++) {
+        const dayCourses = courses[i];
+        let timeSet = [];
+        let dataSet = [
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          [],
+          []
+        ];
+        for (let m = 0, n = dayCourses.length; m < n; m++) {
+          const course = dayCourses[m];
+          const time = course.time.split(',');
+          for (let j = 0, k = time.length; j < k; j++) {
+            timeSet.push(parseInt(time[j]));
+            dataSet[parseInt(time[j])] = course;
           }
-        } else {
-          if (m === 13)
-            sameNum++;
-          const height = 60 * (1 + sameNum) - 6 - 60 * ifFirst;
-          // 结算上一段一样的课
-          if (lastCourse.hasOwnProperty('name')) {
-            if (lastTime.length === 0) {
-              lastTime = ["12", "13"]
-            }
-            const time = this.distinctArr(lastTime);
-            const timeStart = this.index2Time(time[0], lastCourse.address, true);
-            const timeEnd = this.index2Time(time[time.length - 1], lastCourse.address, false);
-            let name = lastCourse.name;
-            if (name.length > 12) {
-              name = name.substr(0, 11) + '…'
-            }
-            // 有课
-            newDayCourses.push({
-              week: dayArrStr[i],
-              name: name,
-              teacher: lastCourse.teacher,
-              address: lastCourse.address.replace('(中外教室）', ''),
-              time: timeStart + ' ~ ' + timeEnd,
-              timeorg: time,
-              bg: lastCourse.bg,
-              height: height
-            })
+        }
+        let newCourses = [];
+        for (let m = 0, n = 14; m < n; m++) {
+          if (this.isInArray(timeSet, m)) {
+            newCourses.push(dataSet[m]);
           } else {
-            // 没课
-            newDayCourses.push({
-              name: '',
-              teacher: '',
-              address: '',
-              time: '',
-              bg: '#ffffff00',
-              height: height
-            })
+            newCourses.push({});
           }
-          lastCourse = course;
-          lastTime = [];
-          sameNum = 0;
-          ifFirst = 0;
         }
+        // 得到包含14个元素的数组（newCourses），没课则空，有课则有数据
+        // 判断是否要合并，并提供相关CSS参数
+        let lastCourse = newCourses[0];
+        let lastTime = [];
+        let sameNum = 0;
+        let newDayCourses = [];
+        let ifFirst = 1;
+        for (let m = 0, n = 14; m < n; m++) {
+          const course = newCourses[m];
+          if (course.name === lastCourse.name && m !== 13) {
+            sameNum++;
+            if (course.hasOwnProperty('time')) {
+              lastTime = lastTime.concat(course.time.split(','));
+            }
+          } else {
+            if (m === 13)
+              sameNum++;
+            const height = 60 * (1 + sameNum) - 6 - 60 * ifFirst;
+            // 结算上一段一样的课
+            if (lastCourse.hasOwnProperty('name')) {
+              if (lastTime.length === 0) {
+                lastTime = ["12", "13"]
+              }
+              const time = this.distinctArr(lastTime);
+              const timeStart = this.index2Time(time[0], lastCourse.address, true);
+              const timeEnd = this.index2Time(time[time.length - 1], lastCourse.address, false);
+              let name = lastCourse.name;
+              if (name.length > 12) {
+                name = name.substr(0, 11) + '…'
+              }
+              // 有课
+              newDayCourses.push({
+                week: dayArrStr[i],
+                name: name,
+                teacher: lastCourse.teacher,
+                address: lastCourse.address.replace('(中外教室）', ''),
+                time: timeStart + ' ~ ' + timeEnd,
+                timeorg: time,
+                bg: lastCourse.bg,
+                height: height
+              })
+            } else {
+              // 没课
+              newDayCourses.push({
+                name: '',
+                teacher: '',
+                address: '',
+                time: '',
+                bg: '#ffffff00',
+                height: height
+              })
+            }
+            lastCourse = course;
+            lastTime = [];
+            sameNum = 0;
+            ifFirst = 0;
+          }
+        }
+        courses[i] = newDayCourses;
       }
-      courses[i] = newDayCourses;
+      this.setData({
+        courses: courses
+      });
     }
-    this.setData({
-      courses: courses
-    });
-  }
 
-  // 原始数据解析成上课时间
-  ,
+    // 原始数据解析成上课时间
+    ,
   index2Time(index, address, start = true) {
     switch (parseInt(index)) {
       case 0:
@@ -388,19 +372,19 @@ Page({
     return Math.floor(Math.random() * (m - n + 1) + n);
   },
   isInArray: (arr, value) => {
-    for (let i = 0; i < arr.length; i++) {
-      if (value === arr[i]) {
-        return true;
+      for (let i = 0; i < arr.length; i++) {
+        if (value === arr[i]) {
+          return true;
+        }
       }
+      return false;
     }
-    return false;
-  }
 
-  // 数组去重
-  ,
+    // 数组去重
+    ,
   distinctArr: (arr) => {
     let len = arr.length;
-    arr.sort(function (a, b) { //对数组进行排序才能方便比较
+    arr.sort(function(a, b) { //对数组进行排序才能方便比较
       return a - b;
     });
 
@@ -475,6 +459,8 @@ Page({
     this.setData({
       bgImg: bgImg
     });
-    wx.showToast({ title: '设置成功！' });
+    wx.showToast({
+      title: '设置成功！'
+    });
   }
 })

@@ -26,33 +26,35 @@
     </view>
   </view>
 
-  <view class="horizontal-space"/>
+  <view class="horizontal-space" />
 
-  <image class="bg-img" src="{{bgImg}}"/>
+  <image class="bg-img" src="{{bgImg}}" />
 
-  <view class="body">
-    <view class="sidebar corner">
-      <block wx:for="{{16}}">
-        <text>{{item+1}}</text>
-      </block>
-    </view>
-    <view class="contentx">
-      <!-- 循环 每天 -->
-      <view class="column" wx:for="{{courses}}" wx:key="*this">
-        <!-- 循环 -->
-        <block wx:for="{{item}}" wx:key="*this">
-          <view class="course" bindtap="showDetail" data-name="{{item.name}}" data-address="{{item.address}}" data-time="{{item.time}}" data-teacher="{{item.teacher}}" data-id="{{id}}" style="border-radius:5px;text-align:center;background-color: {{item.bg}};opacity:0.6;width:{{colWidth}}px;font-size:12px;height: {{item.height}}px;margin-top: 3px;margin-bottom: 3px;">
-            <view>
-              <text>{{item.name}}</text>
-              <view style="height: 12px"></view>
-              <text>{{item.address}}</text>
-            </view>
-          </view>
+  <scroll-view scroll-y style="height: {{courseScrollHeight}}px">
+    <view class="body-container">
+      <view class="sidebar corner">
+        <block wx:for="{{16}}">
+          <text>{{item+1}}</text>
         </block>
       </view>
+      <view class="course-container">
+        <!-- 循环 每天 -->
+        <view class="column" wx:for="{{courses}}" wx:key="*this">
+          <!-- 循环 -->
+          <block wx:for="{{item}}" wx:key="*this">
+            <view class="course" bindtap="showDetail" data-name="{{item.name}}" data-address="{{item.address}}" data-time="{{item.time}}" data-teacher="{{item.teacher}}" data-id="{{id}}" style="background-color: {{item.bg}};width:{{colWidth}}px;height: {{item.height}}px;">
+              <view>
+                <text>{{item.name}}</text>
+                <view style="height: 12px"></view>
+                <text>{{item.address}}</text>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
     </view>
-  </view>
-  <ad unit-id="adunit-cba2ca2e8fd1353d" class="ad-bottom"></ad>
+  </scroll-view>
+  <ad unit-id="adunit-cba2ca2e8fd1353d" class="ad-container"></ad>
 </scroll-view>
 <!-- 侧边栏 -->
 <view class="DrawerClose {{modalName=='viewModal'?'show':''}}" bindtap="hideModal">
