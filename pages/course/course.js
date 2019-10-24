@@ -1,7 +1,9 @@
 const app = getApp();
 const dayArrStr = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 const defaultBg = '/res/default_bg.jpg'
-const palette = ['#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e67e22', '#e74c3c'];
+// const palette = ['#1abc9c', '#3498db', '#9b59b6', '#f1c40f', '#e67e22', '#e74c3c'];
+
+const palette = ['rgba(26,188,156,0.6)', 'rgba(52,152,219,0.6)', 'rgba(155,89,182,0.6)', 'rgba(241,196,15,0.6)', 'rgba(230,126,34,0.6)', 'rgba(231,76,60,0.6)'];
 const oneDayDuration = 24 * 60 * 60 * 1000;
 const oneWeekDuration = 7 * oneDayDuration;
 let dateNow = new Date();
