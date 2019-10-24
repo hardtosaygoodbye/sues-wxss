@@ -1,15 +1,14 @@
-<view class="page">
-  <cu-custom bgColor="bg-gradual-blue" isBack="{{true}}">
-    <view slot="backText">返回</view>
-    <view slot="content">意见反馈及建议</view>
-  </cu-custom>
-  <view class="page__hd">
-    <view class="page__title">微信号：onion_rings</view>
-    <view class="page__desc">欢迎向我反馈你遇到的问题或者建议</view>
-  </view>
-  <view class="page__bd">
-    <view class="button-sp-area">
-      <button class="weui-btn" type="default" plain="true" bindtap="copyNUM">复制微信号</button>
-    </view>
+<cu-custom bgColor="bg-gradual-blue" isBack="{{true}}">
+  <view slot="backText">返回</view>
+  <view slot="content">意见反馈及建议</view>
+</cu-custom>
+<view class="page__hd">
+  <view class="page__title">微信号：onion_rings</view>
+  <view class="page__desc">欢迎向我反馈你遇到的问题或者建议</view>
+</view>
+<view class="page__bd">
+  <view class="button-sp-area">
+    <button class="weui-btn" type="default" plain="true" bindtap="copyNUM">复制微信号</button>
   </view>
 </view>
+<ad unit-id="adunit-7831686dbe7c3388" ad-intervals="30"></ad>

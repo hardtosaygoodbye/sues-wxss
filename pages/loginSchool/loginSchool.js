@@ -12,14 +12,14 @@ Page({
     this.setData({
       username: username,
       password: password
-    })
+    });
   },
-  usernameInput: function(e) {
+  usernameInput(e) {
     this.setData({
       username: e.detail.value
     })
   },
-  passwordInput: function(e) {
+  passwordInput(e) {
     this.setData({
       password: e.detail.value
     })
@@ -34,7 +34,7 @@ Page({
     if (password.length === 0) {
       return
     }
-    self.setData({
+    this.setData({
       btnLoading: true,
       showTopTips: false
     });
@@ -50,44 +50,45 @@ Page({
       success: res => {
         wx.setStorageSync('username', username);
         wx.setStorageSync('password', password);
-        if (res.statusCode === 200) {
-          const resData = res.data;
-          self.setData({
-            btnLoading: false
-          });
-          if (resData.hasOwnProperty('detail')) {
-            self.setData({
-              showTopTips: true,
-              tipes: resData.detail + '，请重试'
-            });
-          } else if (resData.hasOwnProperty('errMsg')) {
-            self.setData({
-              showTopTips: true,
-              tipes: resData.errMsg + '，请重试'
-            });
-          } else {
-            self.setData({
-              showTopTips: false
-            });
-            wx.setStorageSync('updateTime', (new Date()).getTime());
-            wx.showToast({
-              title: '导入成功',
-              complete: () => {
-                setTimeout(() => {
-                  app.globalData.course = res.data;
-                  wx.setStorageSync('course', res.data);
-                  wx.navigateBack();
-                }, 1500);
-              }
-            })
-          }
-        } else {
+        if (res.statusCode !== 200) {
           self.setData({
             showTopTips: true,
             btnLoading: false,
             tipes: '服务器维护中，请稍后再试'
           });
+          return;
         }
+        const resData = res.data;
+        self.setData({
+          btnLoading: false
+        });
+        if (resData.hasOwnProperty('detail')) {
+          self.setData({
+            showTopTips: true,
+            tipes: resData.detail + '，请重试'
+          });
+          return;
+        } 
+        if (resData.hasOwnProperty('errMsg')) {
+          self.setData({
+            showTopTips: true,
+            tipes: resData.errMsg + '，请重试'
+          });
+          return;
+        }
+        self.setData({
+          showTopTips: false
+        });
+        wx.showToast({
+          title: '导入成功',
+          complete: () => {
+            setTimeout(() => {
+              app.globalData.course = res.data;
+              wx.setStorageSync('course', res.data);
+              wx.navigateBack();
+            }, 1500);
+          }
+        })
       }
     })
   }

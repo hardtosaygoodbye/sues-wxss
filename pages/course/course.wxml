@@ -56,7 +56,7 @@
   </scroll-view>
   <view class="ad-container">
     <view class="ad-item">
-      <ad unit-id="adunit-cba2ca2e8fd1353d"></ad>
+      <ad unit-id="adunit-cba2ca2e8fd1353d" ad-intervals="30"></ad>
     </view>
   </view>
 
