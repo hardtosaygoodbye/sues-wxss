@@ -10,7 +10,7 @@
   <view class="week-container">
     <image src="/res/com_arrow_left.png" bindtap="bindPreWeek" />
     <picker class="weui-flex__item header-time" bindchange="bindWeekChange" value="{{dateTitle}}" range="{{weekArr}}">
-      <view>{{weekArr[weekIndex]}}</view>
+      <text>{{weekArr[weekIndex]}}</text>
     </picker>
     <image src="/res/com_arrow_right.png" bindtap="bindNextWeek" />
   </view>

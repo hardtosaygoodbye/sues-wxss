@@ -13,13 +13,14 @@ page {
 .week-container {
   position: fixed;
   z-index: 100;
-  background-color: #0000005f;
+  background-color: #000000;
   color: white;
   width: 100%;
   height: 30px;
   display: flex;
   align-items: center;
   padding: 0px 30px;
+  opacity: 0.6;
 }
 
 .week-container image {
@@ -33,13 +34,14 @@ page {
 .day-container {
   position: fixed;
   z-index: 100;
-  background-color: #0000005f;
+  background-color: #000000;
   color: white;
   width: 100%;
   height: 40px;
   margin-top: 30px;
   display: flex;
   align-items: center;
+  opacity: 0.6;
 }
 
 .day-item {
@@ -91,12 +93,13 @@ page {
 
 /* sidebar */
 .sidebar {
-  background-color: #0000005f;
+  background-color: #000000;
   color: white;
   flex: none;
   display: flex;
   flex-direction: column;
   padding: 10rpx 0;
+  opacity: 0.6;
 }
 
 .sidebar text {
@@ -165,6 +168,7 @@ page {
   margin-top: 3px;
   margin-bottom: 3px;
   font-size:12px;
+  opacity: 0.6;
 }
 
 .header {
