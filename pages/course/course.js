@@ -225,6 +225,8 @@ Page({
               lastTime = ["12", "13"]
             }
             const time = this.distinctArr(lastTime);
+            const timeStart = this.index2Time(time[0], lastCourse.address, true);
+            const timeEnd = this.index2Time(time[time.length - 1], lastCourse.address, false);
             let name = lastCourse.name;
             if (name.length > 12) {
               name = name.substr(0, 11) + '…'
@@ -234,7 +236,8 @@ Page({
               week: dayArrStr[i],
               name: name,
               teacher: lastCourse.teacher,
-              address: lastCourse.address,
+              address: lastCourse.address.replace('(中外教室）', ''),
+              time: timeStart + ' ~ ' + timeEnd,
               timeorg: time,
               bg: lastCourse.bg,
               height: height
@@ -245,6 +248,7 @@ Page({
               name: '',
               teacher: '',
               address: '',
+              time: '',
               bg: '#ffffff00',
               height: height
             });
@@ -261,15 +265,56 @@ Page({
       courses: courses
     });
   },
-  showDetail(e) {
+  index2Time(index, address, start = true) {
+    switch (parseInt(index)) {
+      case 0:
+        return start ? '08:15' : '09:00';
+      case 1:
+        return start ? '09:00' : '09:45';
+      case 2:
+        const a = address.substr(0, 1);
+        if (a === 'D' || a === 'E' || a === 'F')
+          return start ? '10:25' : '11:10';
+        else
+          return start ? '10:05' : '10:50';
+      case 3:
+        const b = address.substr(0, 1);
+        if (b === 'D' || b === 'E' || b === 'F')
+          return start ? '11:10' : '11:55';
+        else
+          return start ? '10:50' : '11:35';
+      case 4:
+        return start ? '13:00' : '13:45';
+      case 5:
+        return start ? '13:45' : '14:30';
+      case 6:
+        return start ? '14:50' : '15:35';
+      case 7:
+        return start ? '15:35' : '16:20';
+      case 8:
+        return start ? '18:00' : '18:45';
+      case 9:
+        return start ? '18:45' : '19:30';
+      case 10:
+        return start ? '19:30' : '20:15';
+      case 11:
+        return start ? '20:15' : '21:00';
+      case 12:
+        return start ? '16:30' : '17:15';
+      case 13:
+        return start ? '17:15' : '18:00';
+    }
+  },
+  showDetail: e => {
     const course = e.currentTarget.dataset;
-    if (!course.name.length) return;
-    wx.showModal({
-      title: course.name,
-      content: course.address + ' ' + course.teacher,
-      confirmText: '好',
-      showCancel: false
-    });
+    if (course.name !== '') {
+      wx.showModal({
+        title: course.name,
+        content: course.time + ' ' + course.address + ' ' + course.teacher,
+        confirmText: '好',
+        showCancel: false
+      });
+    }
   },
   rnd(n, m) {
     return Math.floor(Math.random() * (m - n + 1) + n);
