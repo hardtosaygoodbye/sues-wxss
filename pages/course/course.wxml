@@ -28,7 +28,7 @@
 
   <view class="horizontal-space" />
 
-  <image class="bg-img" src="{{bgImg}}" />
+  <image class="bg-img" src="{{bgImg}}" mode="aspectFill"/>
 
   <scroll-view scroll-y style="height: {{courseScrollHeight}}px">
     <view class="body-container">
